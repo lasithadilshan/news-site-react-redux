@@ -1,0 +1,177 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ═══════════════════════════════════════════
+   CSS Design System / Variables
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* Base font */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Accent Colors */
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-subtle: rgba(99, 102, 241, 0.12);
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  --gradient-accent: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+
+  /* Transition */
+  --transition: 0.2s ease;
+}
+
+/* ═══ Dark Theme ═══ */
+[data-theme='dark'] {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --nav-bg: rgba(10, 10, 15, 0.85);
+  --card-bg: #151520;
+  --footer-bg: #0d0d14;
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b8;
+  --text-muted: #65657a;
+  --border-color: rgba(255, 255, 255, 0.06);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --active-bg: rgba(255, 255, 255, 0.08);
+  --skeleton-bg: #1a1a28;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.04);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --scrollbar-bg: #111118;
+  --scrollbar-thumb: #2a2a3a;
+}
+
+/* ═══ Light Theme ═══ */
+[data-theme='light'] {
+  --bg-primary: #f8f9fb;
+  --bg-secondary: #ffffff;
+  --nav-bg: rgba(248, 249, 251, 0.9);
+  --card-bg: #ffffff;
+  --footer-bg: #f0f1f3;
+  --text-primary: #111118;
+  --text-secondary: #555570;
+  --text-muted: #999ab0;
+  --border-color: rgba(0, 0, 0, 0.07);
+  --hover-bg: rgba(0, 0, 0, 0.03);
+  --active-bg: rgba(0, 0, 0, 0.06);
+  --skeleton-bg: #e8e8f0;
+  --skeleton-shimmer: rgba(255, 255, 255, 0.5);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.1);
+  --scrollbar-bg: #f0f1f3;
+  --scrollbar-thumb: #c8c8d8;
+}
+
+/* ═══════════════════════════════════════════
+   Global Reset & Base
+   ═══════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   App Layout
+   ═══════════════════════════════════════════ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* ═══════════════════════════════════════════
+   Page Transition
+   ═══════════════════════════════════════════ */
+
+.page-enter {
+  animation: pageIn 0.35s ease;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Scrollbar style for Firefox
+   ═══════════════════════════════════════════ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
