@@ -18,15 +18,26 @@ newsApi.interceptors.response.use(
       return {
         ...response,
         data: {
-          articles: data.news.map((item) => ({
-            title: item.title,
-            description: item.description,
-            content: item.description,
-            url: item.url,
-            image: item.image !== 'None' ? item.image : null,
-            publishedAt: item.published ? new Date(item.published).toISOString() : new Date().toISOString(),
-            source: { name: item.author || 'Currents' },
-          })),
+          articles: data.news.map((item) => {
+            // Safely parse "YYYY-MM-DD HH:MM:SS +0000" to "YYYY-MM-DDTHH:MM:SSZ" for strict parsers (Safari/date-fns)
+            let safeDateStr = new Date().toISOString();
+            if (item.published) {
+              const cleanedStr = item.published.replace(' +0000', 'Z').replace(' ', 'T');
+              if (!Number.isNaN(new Date(cleanedStr).getTime())) {
+                safeDateStr = cleanedStr;
+              }
+            }
+
+            return {
+              title: item.title,
+              description: item.description,
+              content: item.description,
+              url: item.url,
+              image: item.image !== 'None' ? item.image : null,
+              publishedAt: safeDateStr,
+              source: { name: item.author || 'Currents' },
+            };
+          }),
           totalArticles: data.news.length > 0 ? 100 : 0, // Approximate for pagination math
         },
       };
