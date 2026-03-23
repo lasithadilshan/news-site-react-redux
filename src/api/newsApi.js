@@ -24,7 +24,7 @@ newsApi.interceptors.response.use(
             content: item.description,
             url: item.url,
             image: item.image !== 'None' ? item.image : null,
-            publishedAt: item.published,
+            publishedAt: item.published ? new Date(item.published).toISOString() : new Date().toISOString(),
             source: { name: item.author || 'Currents' },
           })),
           totalArticles: data.news.length > 0 ? 100 : 0, // Approximate for pagination math
