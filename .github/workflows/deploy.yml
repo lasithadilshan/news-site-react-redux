@@ -34,6 +34,7 @@ jobs:
         run: npm run build
         env:
           VITE_GNEWS_API_KEY: ${{ secrets.VITE_GNEWS_API_KEY }}
+          VITE_CURRENTS_API_KEY: ${{ secrets.VITE_CURRENTS_API_KEY }}
           VITE_NEWS_REFRESH_INTERVAL: 300000
 
       - name: Upload GitHub Pages artifact
