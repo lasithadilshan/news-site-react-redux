@@ -56,4 +56,13 @@ export const searchNews = async ({ query, page = 1, max = 10 } = {}) => {
   return response.data;
 };
 
+export const fetchAiSummary = async ({ category = 'general' } = {}) => {
+  const response = await newsApi.get('/ai-summary', {
+    params: {
+      category: category === 'general' ? undefined : category
+    },
+  });
+  return response.data;
+};
+
 export default newsApi;

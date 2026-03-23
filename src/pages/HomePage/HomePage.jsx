@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchHeadlines,
@@ -12,10 +12,11 @@ import {
 } from '../../store/slices/newsSlice';
 import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { fetchAiSummary } from '../../api/newsApi';
 import ArticleCard from '../../components/ArticleCard/ArticleCard.jsx';
 import Loader from '../../components/Loader/Loader.jsx';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage.jsx';
-import { FiTrendingUp, FiZap } from 'react-icons/fi';
+import { FiTrendingUp, FiZap, FiCpu } from 'react-icons/fi';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -27,6 +28,9 @@ const HomePage = () => {
   const hasMore = useSelector(selectHasMore);
   const loadMoreStatus = useSelector(selectLoadMoreStatus);
 
+  const [aiSummary, setAiSummary] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+
   useAutoRefresh();
 
   useEffect(() => {
@@ -34,6 +38,21 @@ const HomePage = () => {
       dispatch(fetchHeadlines({ category: 'general' }));
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+    if (status === 'succeeded' && articles.length > 0 && !aiSummary && !aiLoading) {
+      setAiLoading(true);
+      fetchAiSummary({ category: 'general' })
+        .then((res) => {
+          if (res.summary) setAiSummary(res.summary);
+          setAiLoading(false);
+        })
+        .catch((err) => {
+          console.error("AI Summary failed", err);
+          setAiLoading(false);
+        });
+    }
+  }, [status, articles.length]);
 
   const handleLoadMore = () => {
     if (loadMoreStatus !== 'loading') {
@@ -82,6 +101,37 @@ const HomePage = () => {
           <div className="hero-orb hero-orb-3" />
         </div>
       </section>
+
+      {/* AI Summary Section */}
+      {(aiLoading || aiSummary) && (
+        <section className="section" style={{ marginTop: '-2rem', marginBottom: '2rem' }}>
+          <div className="section-header">
+            <div className="section-title-wrapper" style={{ gap: '0.75rem' }}>
+              <div style={{ background: 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)', padding: '0.5rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center' }}>
+                <FiCpu className="section-icon" style={{ color: 'white', margin: 0, fontSize: '1.25rem' }} />
+              </div>
+              <h2 className="section-title" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #6366f1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                AI Briefing
+              </h2>
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem', background: 'var(--card-bg)', borderRadius: '1rem', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-md)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'linear-gradient(90deg, #a855f7 0%, #6366f1 100%)' }} />
+            {aiLoading ? (
+               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                 <FiZap style={{ animation: 'pulse 1.5s infinite', color: '#a855f7' }} />
+                 <span>Generating real-time automated summary via Gemini 1.5 Flash...</span>
+               </div>
+            ) : (
+              <p style={{ lineHeight: '1.6', fontSize: '1.05rem', color: 'var(--text-primary)', margin: 0 }}>
+                {aiSummary.split('\n').map((line, i) => (
+                  <span key={i}>{line}<br /></span>
+                ))}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Trending section */}
       <section className="section" id="trending-section">
