@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { selectTheme } from './store/slices/uiSlice';
 import Navbar from './components/Navbar/Navbar.jsx';
